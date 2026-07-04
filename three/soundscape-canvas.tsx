@@ -212,7 +212,7 @@ function SoundScapeCanvasComponent({
 }) {
   return (
     <div className="absolute inset-0">
-      <Canvas dpr={[1, 1.75]} gl={{ antialias: true, alpha: true }}>
+      <Canvas dpr={[1, 1.75]} gl={{ antialias: true }}>
         <SceneContent colors={isActive ? colors : ["#38BDF8", "#A855F7", "#E2E8F0"]} />
       </Canvas>
     </div>
