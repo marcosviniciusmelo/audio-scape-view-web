@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -10,15 +9,8 @@ import { InsightCard } from "@/components/insight-card";
 import { useAudioAnalysis } from "@/hooks/use-audio-analysis";
 import { useSoundscapeStore } from "@/lib/soundscape-store";
 import { analyzeAudioSnippet, fetchContextImages } from "@/services/soundscape-api";
+import { SoundScapeCanvas } from "@/three/soundscape-canvas";
 import type { AnalyzeSoundscapeRequest } from "@/types/soundscape";
-
-const SoundScapeCanvas = dynamic(
-  () => import("@/three/soundscape-canvas").then((module) => module.SoundScapeCanvas),
-  {
-    ssr: false,
-    loading: () => <div className="absolute inset-0 bg-slate-950/40" />,
-  },
-);
 
 const starterKeywords = ["aurora", "neon landscape", "cinematic sky", "abstract waves"];
 
