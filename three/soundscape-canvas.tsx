@@ -8,10 +8,6 @@ import * as THREE from "three";
 
 import { useSoundscapeStore } from "@/lib/soundscape-store";
 
-function lerpColor(target: THREE.Color, colors: string[], fallback: string) {
-  target.set(colors[0] ?? fallback);
-}
-
 function PulseOrb({ colors }: { colors: string[] }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
@@ -24,7 +20,10 @@ function PulseOrb({ colors }: { colors: string[] }) {
     if (meshRef.current) {
       meshRef.current.rotation.x += delta * (0.18 + metrics.mid * 0.5);
       meshRef.current.rotation.y += delta * (0.34 + metrics.treble * 0.8);
-      meshRef.current.scale.lerpScalar(scale, 0.1);
+      meshRef.current.scale.lerp(
+        new THREE.Vector3(scale, scale, scale),
+        0.1,
+      );
       meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.7) * (0.18 + metrics.mid * 0.4);
     }
 
@@ -119,7 +118,12 @@ function ParticleField({ colors }: { colors: string[] }) {
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" array={positions} count={positions.length / 3} itemSize={3} />
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+          count={positions.length / 3}
+          itemSize={3}
+        />
       </bufferGeometry>
       <pointsMaterial color={color} size={0.05} transparent opacity={0.7} depthWrite={false} />
     </points>
