@@ -27,6 +27,23 @@ const defaultImages: BackgroundImage[] = [
   },
 ];
 
+function withAlpha(color: string, alphaHex: string) {
+  const normalized = color.replace("#", "");
+
+  if (/^[\da-fA-F]{6}$/.test(normalized)) {
+    return `#${normalized}${alphaHex}`;
+  }
+
+  if (/^[\da-fA-F]{3}$/.test(normalized)) {
+    return `#${normalized
+      .split("")
+      .map((token) => `${token}${token}`)
+      .join("")}${alphaHex}`;
+  }
+
+  return color;
+}
+
 export function BackgroundStage({
   colors,
   images,
@@ -39,7 +56,7 @@ export function BackgroundStage({
   const activeImage = resolvedImages[activeIndex] ?? resolvedImages[0];
   const gradient = useMemo(() => {
     const [primary = "#38BDF8", secondary = "#A855F7", accent = "#020617"] = colors;
-    return `radial-gradient(circle at top, ${primary}40, transparent 34%), radial-gradient(circle at right, ${secondary}35, transparent 38%), linear-gradient(140deg, ${accent} 5%, #020617 48%, ${secondary}18 100%)`;
+    return `radial-gradient(circle at top, ${withAlpha(primary, "40")}, transparent 34%), radial-gradient(circle at right, ${withAlpha(secondary, "35")}, transparent 38%), linear-gradient(140deg, ${accent} 5%, #020617 48%, ${withAlpha(secondary, "18")} 100%)`;
   }, [colors]);
 
   return (

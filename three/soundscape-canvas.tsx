@@ -39,7 +39,7 @@ function PulseOrb({ colors }: { colors: string[] }) {
   return (
     <Float speed={2.4} rotationIntensity={1.2} floatIntensity={2.2}>
       <mesh ref={meshRef} position={[0, 0.55, 0]}>
-        <icosahedronGeometry args={[0.95, 8]} />
+        <icosahedronGeometry args={[0.95, 5]} />
         <meshStandardMaterial ref={materialRef} emissive={color} color={color} metalness={0.18} />
       </mesh>
     </Float>
@@ -48,7 +48,7 @@ function PulseOrb({ colors }: { colors: string[] }) {
 
 function WaveField({ colors }: { colors: string[] }) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const geometry = useMemo(() => new THREE.PlaneGeometry(18, 18, 80, 80), []);
+  const geometry = useMemo(() => new THREE.PlaneGeometry(18, 18, 60, 60), []);
   const color = useMemo(() => new THREE.Color(colors[1] ?? "#A855F7"), [colors]);
 
   useFrame((state) => {
@@ -87,7 +87,7 @@ function WaveField({ colors }: { colors: string[] }) {
 function ParticleField({ colors }: { colors: string[] }) {
   const pointsRef = useRef<THREE.Points>(null);
   const positions = useMemo(() => {
-    const buffer = new Float32Array(900 * 3);
+    const buffer = new Float32Array(540 * 3);
 
     for (let index = 0; index < buffer.length; index += 3) {
       buffer[index] = (Math.random() - 0.5) * 16;

@@ -162,8 +162,8 @@ export function useAudioAnalysis(options: UseAudioAnalysisOptions = {}) {
 
       const audioContext = new AudioContext();
       const analyser = audioContext.createAnalyser();
-      analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.82;
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.68;
 
       const source = audioContext.createMediaStreamSource(stream);
       source.connect(analyser);
