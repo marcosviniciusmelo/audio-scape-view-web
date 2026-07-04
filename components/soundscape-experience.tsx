@@ -22,16 +22,22 @@ export function SoundScapeExperience() {
   const setInsight = useSoundscapeStore((state) => state.setInsight);
   const colors = insight?.colors ?? ["#38BDF8", "#A855F7", "#020617"];
 
-  const imageMutation = useMutation({
+  const {
+    mutate: seedImages,
+    mutateAsync: requestImages,
+  } = useMutation({
     mutationFn: fetchContextImages,
     onSuccess: (nextImages) => setImages(nextImages),
   });
 
-  const analyzeMutation = useMutation({
+  const {
+    isPending: isAnalyzing,
+    mutateAsync: requestAnalysis,
+  } = useMutation({
     mutationFn: analyzeAudioSnippet,
     onSuccess: async (nextInsight) => {
       setInsight(nextInsight);
-      await imageMutation.mutateAsync({
+      await requestImages({
         keywords: nextInsight.keywords,
         mood: nextInsight.mood,
       });
@@ -39,18 +45,18 @@ export function SoundScapeExperience() {
   });
 
   useEffect(() => {
-    imageMutation.mutate({ keywords: starterKeywords, mood: "cinematic" });
-  }, [imageMutation]);
+    seedImages({ keywords: starterKeywords, mood: "cinematic" });
+  }, [seedImages]);
 
   const handleSnippet = useCallback(
     async (payload: AnalyzeSoundscapeRequest) => {
-      if (analyzeMutation.isPending) {
+      if (isAnalyzing) {
         return;
       }
 
-      await analyzeMutation.mutateAsync(payload);
+      await requestAnalysis(payload);
     },
-    [analyzeMutation],
+    [isAnalyzing, requestAnalysis],
   );
 
   const { error, start, status } = useAudioAnalysis({ onSnippet: handleSnippet });
@@ -65,7 +71,7 @@ export function SoundScapeExperience() {
 
   const statusLabel = useMemo(() => {
     if (status === "active") {
-      return analyzeMutation.isPending ? "Analyzing soundscape" : "Visualizer live";
+      return isAnalyzing ? "Analyzing soundscape" : "Visualizer live";
     }
 
     if (status === "requesting") {
@@ -73,7 +79,7 @@ export function SoundScapeExperience() {
     }
 
     return "Waiting for microphone";
-  }, [analyzeMutation.isPending, status]);
+  }, [isAnalyzing, status]);
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 text-white">
